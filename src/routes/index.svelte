@@ -1,29 +1,25 @@
 <script>
 	import { Tabs, Tab, TabList, TabPanel } from 'svelte-tabs';
-	import ScratchOrg from './ScratchOrg.svelte';
+	import ScratchOrg from '../components/ScratchOrg.svelte';
+	import * as utils from './_utils'
 
+	let error;
 	let promise = getScratchOrgs();
-	let results;
 	async function getScratchOrgs() {
-		try {
-			let res = await fetch('/api/manageorgs/list')
-			.then(res => res.json())
-			.then(data => {
-				results = data;
-			}).catch((e) => {
-				results = JSON.stringify(e);
-			});
+		let results = await utils.sendRequest(`/api/manageorgs/list`).catch((e) => { error = e; });
 
-			return results.result.scratchOrgs;
-		}catch(e) {
-			return JSON.stringify(e);
-		}
+		return results;
 	}
 
 </script>
 
 <style>
-
+:global(.svelte-tabs li.svelte-tabs__selected){
+	background-color: #fff;
+    border-color: #dbdbdb;
+    border: 1px solid;
+    border-bottom-color: transparent!important;
+}
 </style>
 
 <svelte:head>
@@ -31,15 +27,15 @@
 </svelte:head>
 
 {#await promise}
-	<p>...waiting</p>
+	<p>Loading...</p>
 {:then results}
 	<Tabs>
 		<TabList>
-			{#each results as { alias }}
+			{#each results.result.scratchOrgs as { alias }}
 				<Tab>{alias}</Tab>
 			{/each}
 		</TabList>
-		{#each results as orgData, i}
+		{#each results.result.scratchOrgs as orgData, i}
 			<TabPanel>
 				<ScratchOrg orgData={orgData}></ScratchOrg>
 			</TabPanel>

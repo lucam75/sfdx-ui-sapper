@@ -1,16 +1,19 @@
-const repos = {
-    "Base": {
+const repos = [
+    {
+        "Name": "Base",
         "Label": "Base",
         "Path": "path-to-base"
     },
-    "Orders": {
+    {
+        "Name": "Orders",
         "Label": "Orders",
         "Path": "path-to-orders"
     },
-    "Cases": {
+    {
+        "Name": "Cases",
         "Label": "Cases",
         "Path": "path-to-cases"
     }
-}
+];
 
 export default repos;
