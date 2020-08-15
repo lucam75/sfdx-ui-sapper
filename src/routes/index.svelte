@@ -1,25 +1,50 @@
 <script>
+	import { Tabs, Tab, TabList, TabPanel } from 'svelte-tabs';
+	import ScratchOrg from './ScratchOrg.svelte';
 
+	let promise = getScratchOrgs();
 	let results;
-	let handleOnClick = () => {
-		fetch('/api/hellow')
-		.then(res => res.json())
-		.then(data => {
-			console.log(data);
-			results = data;
-		}).catch((e) => {
-			results = JSON.stringify(e);
-		});
+	async function getScratchOrgs() {
+		try {
+			let res = await fetch('/api/manageorgs/list')
+			.then(res => res.json())
+			.then(data => {
+				results = data;
+			}).catch((e) => {
+				results = JSON.stringify(e);
+			});
+
+			return results.result.scratchOrgs;
+		}catch(e) {
+			return JSON.stringify(e);
+		}
 	}
+
 </script>
+
+<style>
+
+</style>
 
 <svelte:head>
 	<title>SFDX GUI - UI for Salesforce DX</title>
 </svelte:head>
 
-<Button type="is-primary" on:click={handleOnClick}>Organization list</Button>
-
-<div class="results">
-	{results}
-</div>
-
+{#await promise}
+	<p>...waiting</p>
+{:then results}
+	<Tabs>
+		<TabList>
+			{#each results as { alias }}
+				<Tab>{alias}</Tab>
+			{/each}
+		</TabList>
+		{#each results as orgData, i}
+			<TabPanel>
+				<ScratchOrg orgData={orgData}></ScratchOrg>
+			</TabPanel>
+		{/each}
+	</Tabs>
+{:catch error}
+	<p style="color: red">{error.message}</p>
+{/await}
