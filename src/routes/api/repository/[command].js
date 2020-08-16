@@ -3,6 +3,7 @@ const { execSync } = require("child_process");
 
 let queryString;
 let response;
+let contentType = 'application/json';
 
 export function get(req, res, next) {
 	// the `command` parameter is available because this file
@@ -25,7 +26,7 @@ export function get(req, res, next) {
 	};
 
 	if (response !== undefined) {
-		res.setHeader('Content-Type', 'application/json');
+		res.setHeader('Content-Type', contentType);
 		res.end(JSON.stringify(response));
 	} else {
 		next();
@@ -40,9 +41,18 @@ function listRepos() {
 }
 
 function pushCode() {
-    response = execSync(`sfdx force:source:push -u ${queryString.org}`);
+    // set current directory to queryString.repo
+    let currentRepo = repos.find(x => x.Name === queryString.repo);
+    if (currentRepo !== undefined) {
+		contentType = 'text/plain';
+        process.chdir(currentRepo.Path);
+        response = execSync('dir');
+    }
+    
+    // push code to queryString.org
+    // response = execSync(`sfdx force:source:push -u ${queryString.org}`);
 }
 
 function pullCode() {
-    response = execSync(`sfdx force:source:pull -u ${queryString.org}`);
+    // response = execSync(`sfdx force:source:pull -u ${queryString.org}`);
 }

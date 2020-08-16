@@ -1,7 +1,9 @@
 {
-  "name": "TODO",
-  "description": "TODO",
+  "name": "sfdx-ui-sapper",
+  "description": "Web user interface built in using Sapper",
   "version": "0.0.1",
+  "author": "Luis Campos (lucam75@gmail.com)",
+  "license": "MIT",
   "scripts": {
     "dev": "sapper dev",
     "build": "sapper build --legacy",

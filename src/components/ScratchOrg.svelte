@@ -23,14 +23,19 @@
 	let handleChangeAliasOrg = () => {
 		console.log('change alias to ' + newAlias);
 		let newAlias = prompt(`New alias for ${orgData.username}`);
-		let results = utils.sendRequest(`/api/manageorgs/changealias?alias=${newAlias}&username=${orgData.username}`).catch((e) => { error = e; });
+		let results = utils.sendRequestJson(`/api/manageorgs/changealias?alias=${newAlias}&username=${orgData.username}`).catch((e) => { error = e; });
 		console.log('results ', results);
 	}
 
 	let promise = getRepos();
 	async function getRepos() {
-		let repos = await utils.sendRequest(`/api/repository/list`).catch((e) => { error = e; });
+		let repos = await utils.sendRequestJson(`/api/repository/list`).catch((e) => { error = e; });
 		return repos;
+	}
+
+	let handlePushCode = async (repoName) => {
+		let repos = await utils.sendRequest(`/api/repository/push?repo=${repoName}&org=${orgData.alias}`).catch((e) => { error = e; });
+		console.log(repos);
 	}
 </script>
 
@@ -70,11 +75,11 @@
 						</tr>
 					</thead>
 					<tbody>
-						{#each repos as orgData, i}
+						{#each repos as repoData, i}
 						<tr>
-							<td>{orgData.Label}</td>
+							<td>{repoData.Label}</td>
 							<td>
-								<button class="button is-link is-small">Push</button>
+								<button class="button is-link is-small" on:click={() => handlePushCode(repoData.Name)}>Push</button>
 								<button class="button is-link is-small">Pull</button>
 								<button class="button is-link is-small">Assign permissions</button>
 								<button class="button is-link is-small">Load data</button>

@@ -6,7 +6,7 @@
 	let error;
 	let promise = getScratchOrgs();
 	async function getScratchOrgs() {
-		let results = await utils.sendRequest(`/api/manageorgs/list`).catch((e) => { error = e; });
+		let results = await utils.sendRequestJson(`/api/manageorgs/list`).catch((e) => { error = e; });
 
 		return results;
 	}

@@ -13,6 +13,11 @@ const repos = [
         "Name": "Cases",
         "Label": "Cases",
         "Path": "path-to-cases"
+    },
+    {
+        "Name": "sfdc-ui-lookup-lwc",
+        "Label": "Lookup LWC",
+        "Path": "D:\\\\Downloads\\\\Personal Projects\\\\sfdc-ui-lookup-lwc"
     }
 ];
 
